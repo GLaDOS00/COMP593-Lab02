@@ -42,6 +42,7 @@ def get_order_dir(sales_csv):
 
     return order_dir    
 
+# Order Files
 def split_sales_into_orders(sales_csv, order_dir):
     
     # Reading data from sales data CSV into DataFrame
@@ -74,23 +75,24 @@ def split_sales_into_orders(sales_csv, order_dir):
 
         # Saving the order information to an Excel spreadsheet
         sheet_name = 'Order #' + str(order_id)
-        writer = pd.ExcelWriter(order_df, engine= 'xlsxwriter')
-        order_df.to_excel(order_file_path, index=False, sheet_name=sheet_name)
+        writer = pd.ExcelWriter(order_file_path, engine= 'xlsxwriter')
+        order_df.to_excel(writer, index=False, sheet_name=sheet_name)
         workbook = writer.book
-        worksheet = writer.sheets['report']
-
+        worksheet = writer.sheets[sheet_name]
+        
         # Adding a number format for cells with money
-        money_fmt = workbook.add_format({'num_format': '$###,###.##','bold': True})
+        money_fmt = workbook.add_format({'num_format': '$###,###.00','bold': True})
 
         # Formatting of column width
-        worksheet.set_column('A', 11)
-        worksheet.set_column('B', 13)
-        worksheet.setcolumn('C:E', 15)
-        worksheet.setcolumn('F:G', 12, money_fmt)
-        worksheet.setcolumn('H', 10)
-        worksheet.setcolumn('I', 30)
+        worksheet.set_column('A:A', 11)
+        worksheet.set_column('B:B', 13)
+        worksheet.set_column('C:E', 15)
+        worksheet.set_column('F:G', 13, money_fmt)
+        worksheet.set_column('H:H', 10)
+        worksheet.set_column('I:I', 30)
 
-
+        writer.save()
+         
 
 
 sales_csv = get_sales_csv()
